@@ -15,6 +15,7 @@
  */
 
 var TodoUICtrl=require("../controllers/todoctrl").TodoUICtrl;
+var TodoItemCtrl=require("../controllers/todoitemctrl").TodoItemCtrl;
 
 /**
  * Main TODO template
@@ -36,7 +37,7 @@ var TodoUICtrl=require("../controllers/todoctrl").TodoUICtrl;
 				<ul id="todo-list">
 					{foreach todo in ctrl.todos}
 						{if ctrl.isInFilter(todo, ctrl.filter)}
-							<#todoItem todo="{todo}" ctrl="{ctrl}"/>
+							<#todoItem todo="{todo}" parentCtrl="{ctrl}" />
 						{/if}
 					{/foreach}
 				</ul>
@@ -75,22 +76,24 @@ var TodoUICtrl=require("../controllers/todoctrl").TodoUICtrl;
 /**
  * template displaying the todo element
  * @param todo the todo data model
- * @param ctrl the general controller
+ * @param parentCtrl the general controller
  */
-{template todoItem(todo, ctrl)}
+{template todoItem using itemCtrl:TodoItemCtrl}
+	{let parentCtrl = itemCtrl.parentCtrl}
+	{let todo = itemCtrl.todo}
 	<li class="{'completed':todo.completed, 'editing':todo.editMode}">
 		{if todo.editMode}
-			<form onsubmit="{ctrl.doneEditing(todo)}" class="editform">
+			<form onsubmit="{parentCtrl.doneEditing(todo)}" class="editform">
 				// TODO focus on node creation
-				<input type="text" class="edit" title="{ctrl.editTodo.title}" value="{ctrl.editTodo.title}"
-					onblur="{ctrl.doneEditing(todo)}"
-					onkeydown="{ctrl.todoEditKeydown(event, todo)}"  />
+				<input type="text" class="edit" title="{parentCtrl.editTodo.title}" value="{parentCtrl.editTodo.title}"
+					onblur="{parentCtrl.doneEditing(todo)}"
+					onkeydown="{parentCtrl.todoEditKeydown(event, todo)}"  />
 			</form>
 		{else}
 			<div class="view">
-				<input class="toggle" type="checkbox" value="{todo.completed}" onchange="{ctrl.syncData()}"/>
-				<label ondblclick="{ctrl.edit(todo)}">{todo.title}</label>
-				<button class="destroy" onclick="{ctrl.remove(todo)}"></button>
+				<input class="toggle" type="checkbox" value="{itemCtrl.completed}" />
+				<label ondblclick="{parentCtrl.edit(todo)}">{todo.title}</label>
+				<button class="destroy" onclick="{parentCtrl.remove(todo)}"></button>
 			</div>
 		{/if}
 	</li>

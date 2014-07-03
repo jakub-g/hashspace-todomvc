@@ -88,9 +88,9 @@ Current status of tests
        Counter
          √ should display the current number of todo items (364ms)
        Clear completed button
-         8) should display the number of completed items
-         9) should remove completed items when clicked
-         10) should be hidden when there are no items that are completed
+         √ should display the number of completed items
+         √ should remove completed items when clicked
+         √ should be hidden when there are no items that are completed
        Routing
          √ should allow me to display active items (714ms)
          11) should respect the back button
